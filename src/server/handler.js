@@ -5,7 +5,7 @@ import storeData from "../services/storeData.js";
 export const postPredictHandler = async (request, h) => {
     const { image } = request.payload;
     const { model } = request.server.app;
-    const { confidenceScore, result, suggestion } = await predictClassification(model, image);
+    const { result, suggestion } = await predictClassification(model, image);
     const id = crypto.randomUUID();
     const createdAt = new Date().toISOString();
    
@@ -18,12 +18,12 @@ export const postPredictHandler = async (request, h) => {
 
     let response;
 
-    if (confidenceScore > 30) {
+    if (result) {
         await storeData(id, data);
 
         response = h.response({
             status: 'success',
-            message: 'Model is predicted successfully.',
+            message: 'Model is predicted successfully',
             data
           })
 
@@ -37,6 +37,5 @@ export const postPredictHandler = async (request, h) => {
         response.code(400);
     }
 
-    
     return response;
 }

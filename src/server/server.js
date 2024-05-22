@@ -1,7 +1,6 @@
 import { server as _server } from '@hapi/hapi';
 import routes from './routes.js';
 import loadModel from '../services/loadModel.js';
-import InputError from '../exceptions/InputError.js';
 import dotenv from 'dotenv'
  
 (async () => {
@@ -20,6 +19,21 @@ import dotenv from 'dotenv'
     server.app.model = model;
  
     server.route(routes);
+
+    server.ext('onPreResponse', (request, h) => {
+        const { response } = request;
+    
+        if (response.isBoom) {
+          const newResponse = h.response({
+            status: 'fail',
+            message: response.message,
+          });
+          newResponse.code(response.output.statusCode);
+          return newResponse;
+        }
+    
+        return h.continue;
+      });
  
     await server.start();
     console.log(`Server start at: ${server.info.uri}`);
