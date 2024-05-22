@@ -18,7 +18,7 @@ export const postPredictHandler = async (request, h) => {
 
     let response;
 
-    if (confidenceScore > 60) {
+    if (confidenceScore > 30) {
         await storeData(id, data);
 
         response = h.response({
