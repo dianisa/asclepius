@@ -6,7 +6,7 @@ async function storeData(id, data) {
     databaseId: 'asclepius-dianisa'
 });
  
-  const predictCollection = db.collection('prediction');
+  const predictCollection = db.collection('predictions');
   return predictCollection.doc(id).set(data);
 }
  
